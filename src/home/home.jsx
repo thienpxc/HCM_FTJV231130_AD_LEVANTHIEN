@@ -1,33 +1,46 @@
 import AddForm from "./add/AddForm";
 
 import BlockAccountModal from "./block/BlockAccountModal";
-import {DeleteAccountModal} from "./delete/DeleteAccountModal ";
+import DeleteAccountModal from "./delete/DeleteAccountModal ";
 import { useDispatch, useSelector } from "react-redux";
 
 import "./home.scss";
 import { useState } from "react";
 import { categoryAction } from "../store/slice/staff.slice";
-export default function Home() {
-    const dispatch = useDispatch();
-  const [Delete, setDelete] = useState(false)
-  const [showAdd, setShowAdd] = useState(false);
-  const openAdd = () => {
-    setShowAdd(true)
-  }
-  const closeAdd = () => {
-    setShowAdd(false)
-  }
-  const openDelete = ()=>{
-    setDelete(true);
-  }
-  const closeDelete = ()=>{
-    setDelete(false)
-  }
-  // const handleDelete = (id) => {
-  //   setDelete(true);
-  //   dispatch(categoryAction.deleteStaff(id));
-  // };
 
+export default function Home() {
+  const dispatch = useDispatch();
+  const [showBlock, setShowBlock] = useState(false);
+  const [deleteId, setDeleteId] = useState(null);
+  const [showAdd, setShowAdd] = useState(false);
+  const [searchEmail, setSearchEmail] = useState("");
+  const openAdd = () => {
+    setShowAdd(true);
+  };
+  const closeAdd = () => {
+    setShowAdd(false);
+  };
+  const openDelete = (id) => {
+    setDeleteId(id);
+  };
+
+  const closeDelete = () => {
+    setDeleteId(null);  
+  };
+  //  const openBlock = () => {
+  //    setShowBlock(true);
+  //   };
+  const closeBlock = () => {
+    setShowBlock(false);
+  };
+  const handleSearch = (e) => {
+    setSearchEmail(e.target.value); // Cập nhật giá trị email
+    dispatch(categoryAction.searchStaffByEmail(e.target.value)); // Gửi yêu cầu tìm kiếm
+  };
+  const handleRefresh = () => {
+    dispatch(categoryAction.staffAll());
+    setSearchEmail("");
+  };
   const categoryStore = useSelector((store) => store.categoryStore);
   return (
     <>
@@ -45,8 +58,14 @@ export default function Home() {
               type="text"
               className="form-control"
               placeholder="Tìm kiếm theo email"
+              value={searchEmail}
+              onChange={handleSearch}
             />
-            <i className="fa-solid fa-arrows-rotate" title="Refresh"></i>
+            <i
+              className="fa-solid fa-arrows-rotate"
+              title="Refresh"
+              onClick={handleRefresh}
+            ></i>
           </div>
           {/* Danh sách nhân viên */}
           <table className="table table-bordered table-hover table-striped">
@@ -65,8 +84,8 @@ export default function Home() {
               {categoryStore.data.map((item, index) => (
                 <tr key={index}>
                   <td>{index + 1}</td>
-                  <td>{item.name}</td>
-                  <td>{item.date}</td>
+                  <td>{item.userName}</td>
+                  <td>{item.Date}</td>
                   <td>{item.email}</td>
                   <td>{item.address}</td>
                   <td>
@@ -82,7 +101,15 @@ export default function Home() {
                     </div>
                   </td>
                   <td>
-                    <span className="button button-block">Chặn</span>
+                    <span
+                      className="button button-block"
+                      onClick={() => {
+                        setShowBlock(true);
+                        console.log(item.id);
+                      }}
+                    >
+                      Chặn
+                    </span>
                   </td>
                   <td>
                     <span className="button button-edit">Sửa</span>
@@ -91,7 +118,8 @@ export default function Home() {
                     <span
                       className="button button-delete"
                       onClick={() => {
-                        openDelete;
+                        openDelete(item.id);
+                        console.log(item.id);
                       }}
                     >
                       Xóa
@@ -141,11 +169,16 @@ export default function Home() {
       </div>
 
       {showAdd && <AddForm closeAdd={closeAdd} />}
-      {/* <!-- Form thêm mới nhân viên --> */}
       {/* <!-- Modal xác nhận chặn tài khoản --> */}
-      <BlockAccountModal />
+
+      {showBlock && (
+        <BlockAccountModal closeBlock={closeBlock} id={showBlock} />
+      )}
       {/* <!-- Modal xác nhận xóa tài khoản --> */}
-      {Delete && <DeleteAccountModal closeDelete={closeDelete} />}
+
+      {deleteId && (
+        <DeleteAccountModal closeDelete={closeDelete} id={deleteId} />
+      )}
     </>
   );
 }

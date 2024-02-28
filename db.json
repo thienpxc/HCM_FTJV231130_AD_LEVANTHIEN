@@ -1,12 +1,18 @@
 {
   "staff": [
     {
-      "id": "4264",
-      "name": "Jod22hn",
-      "Date": "201d8-01-01",
-      "email": "Johned@gmail.com",
-      "address": "123 Main St",
-      "position": "đang hoạt động"
+      "id": "ef54",
+      "userName": "qwe",
+      "Date": "0012-12-03",
+      "email": "test@gmail.com",
+      "address": "1231"
+    },
+    {
+      "id": "ad4e",
+      "userName": "asd",
+      "Date": "0003-02-03",
+      "email": "thienpxc@gmail.com",
+      "address": "123132"
     }
   ]
 }

@@ -1,10 +1,11 @@
-const BlockAccountModal = () => {
+const BlockAccountModal = (closeBlock, id) => {
+  console.log("object", closeBlock, id);
   return (
     <div className="overlay" hidden>
       <div className="modal-custom">
         <div className="modal-title">
           <h4>Cảnh báo</h4>
-          asdadasd
+
           <i className="fa-solid fa-xmark"></i>
         </div>
         <div className="modal-body-custom">
